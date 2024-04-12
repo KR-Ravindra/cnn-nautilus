@@ -6,12 +6,12 @@ spec:
   template:
     spec:
       containers:
-      - name: demo
+      - name: myapp
         image: gitlab-registry.nrp-nautilus.io/prp/jupyter-stack/prp
         command:
         - "python"
         args:
-        - "/opt/repo/nautilus/python.py"
+        - "/opt/repo/cnn-nautilus/cnn.py"
         volumeMounts:
         - name: git-repo
           mountPath: /opt/repo
@@ -23,15 +23,26 @@ spec:
           requests:
             memory: 4Gi
             cpu: "1"
-            nvidia.com/gpu: "1"    
+            nvidia.com/gpu: "1"   
       initContainers:
       - name: init-clone-repo
         image: alpine/git
+        env:
+        - name: GIT_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: github-secret
+              key: user    
+        - name: GIT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: github-secret
+              key: password    
         args:
           - clone
           - --single-branch
-          - https://github.com/KR-Ravindra/nautilus.git
-          - /opt/repo/nautilus
+          - https://$(GIT_USERNAME):$(GIT_PASSWORD)@github.com:KR-Ravindra/cnn-nautilus.git
+          - /opt/repo/cnn-nautilus
         volumeMounts:
           - name: git-repo
             mountPath: /opt/repo
