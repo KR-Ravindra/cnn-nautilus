@@ -58,7 +58,7 @@ class CNN(nn.Module):
         x = self.fc2(x)
         return x
 
-cnn_model = CNN().cuda()
+cnn_model = CNN().to(device)
 cnn_optimizer = optim.Adam(cnn_model.parameters(), lr=0.001)
 
 # Function to train the models
@@ -66,8 +66,8 @@ def train(model, optimizer, criterion, train_loader):
     model.train()
     running_loss = 0.0
     for inputs, labels in train_loader:
-        inputs = inputs.cuda()
-        labels = labels.cuda()
+        inputs = inputs.to(device)
+        labels = labels.to(device)
         optimizer.zero_grad()
         outputs = model(inputs)
         # print(outputs)
@@ -84,8 +84,8 @@ def evaluate(model, criterion, test_loader):
     total = 0
     # with torch.no_grad():
     for inputs, labels in test_loader:
-        inputs = inputs.cuda()
-        labels = labels.cuda()
+        inputs = inputs.to(device)
+        labels = labels.to(device)
         outputs = model(inputs)
         _, predicted = torch.max(outputs, 1)
         total += labels.size(0)
