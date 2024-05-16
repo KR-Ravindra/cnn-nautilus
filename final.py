@@ -82,6 +82,7 @@ optimizer_D = optim.Adam(discriminator.parameters(), lr=lr, betas=(beta1, 0.999)
 
 # Training loop
 start_time = time.time()
+print('Training started at ', start_time)
 
 for epoch in range(epochs):
     for i, data in enumerate(dataloader, 0):
@@ -132,6 +133,7 @@ for epoch in range(epochs):
     # Save generated images
     torchvision.utils.save_image(fake_images.detach(), f'fake_samples_epoch_{epoch}.png', normalize=True)
 end_time = time.time()
+print('Training finished at ', end_time)
 print('Training finished')
 print("Training time: ", end_time - start_time, "seconds")
 
