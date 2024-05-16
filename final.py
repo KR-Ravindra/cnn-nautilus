@@ -132,6 +132,8 @@ for epoch in range(epochs):
 
     # Save generated images
     torchvision.utils.save_image(fake_images.detach(), f'fake_samples_epoch_{epoch}.png', normalize=True)
+torch.save(generator.state_dict(), 'generator.pth')
+
 end_time = time.time()
 print('Training finished at ', end_time)
 print('Training finished')
