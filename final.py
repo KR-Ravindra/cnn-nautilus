@@ -6,6 +6,7 @@ import torchvision.transforms as transforms
 from torch.utils.data import DataLoader
 from torchvision.datasets import MNIST
 import matplotlib.pyplot as plt
+import time
 
 # Define the generator
 class Generator(nn.Module):
@@ -80,6 +81,8 @@ optimizer_G = optim.Adam(generator.parameters(), lr=lr, betas=(beta1, 0.999))
 optimizer_D = optim.Adam(discriminator.parameters(), lr=lr, betas=(beta1, 0.999))
 
 # Training loop
+start_time = time.time()
+
 for epoch in range(epochs):
     for i, data in enumerate(dataloader, 0):
         real_images, _ = data
@@ -128,8 +131,9 @@ for epoch in range(epochs):
 
     # Save generated images
     torchvision.utils.save_image(fake_images.detach(), f'fake_samples_epoch_{epoch}.png', normalize=True)
-
+end_time = time.time()
 print('Training finished')
+print("Training time: ", end_time - start_time, "seconds")
 
 
 import torch
