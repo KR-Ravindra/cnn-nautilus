@@ -87,8 +87,9 @@ for epoch in range(epochs):
 
         # Train the discriminator
         discriminator.zero_grad()
-        real_label = torch.full((batch_size,), 1, dtype=torch.float32)
-        fake_label = torch.full((batch_size,), 0, dtype=torch.float32)
+        real_label = torch.full((batch_size,), 1, dtype=torch.float32, device=device)  # Move labels to the device
+        fake_label = torch.full((batch_size,), 0, dtype=torch.float32, device=device)  # Move labels to the device
+
 
         # Train with real images
         output = discriminator(real_images)
