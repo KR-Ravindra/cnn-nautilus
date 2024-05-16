@@ -51,6 +51,7 @@ class Discriminator(nn.Module):
 
 # Check if CUDA is available and set the device accordingly
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+print("Running on device: ", device)
 
 # Initialize the generator and discriminator
 latent_dim = 100
