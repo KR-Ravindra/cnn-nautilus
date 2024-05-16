@@ -49,10 +49,13 @@ class Discriminator(nn.Module):
     def forward(self, input):
         return self.main(input)
 
+# Check if CUDA is available and set the device accordingly
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
 # Initialize the generator and discriminator
 latent_dim = 100
-generator = Generator(latent_dim)
-discriminator = Discriminator()
+generator = Generator(latent_dim).to(device)
+discriminator = Discriminator().to(device)
 
 # Define the training parameters
 batch_size = 128
@@ -79,6 +82,7 @@ optimizer_D = optim.Adam(discriminator.parameters(), lr=lr, betas=(beta1, 0.999)
 for epoch in range(epochs):
     for i, data in enumerate(dataloader, 0):
         real_images, _ = data
+        real_images = real_images.to(device)  # Move images to the device
         batch_size = real_images.size(0)
 
         # Train the discriminator
@@ -93,7 +97,7 @@ for epoch in range(epochs):
         D_x = output.mean().item()
 
         # Train with fake images
-        noise = torch.randn(batch_size, latent_dim, 1, 1)
+        noise = torch.randn(batch_size, latent_dim, 1, 1, device=device)  # Generate noise on the device
         fake_images = generator(noise)
         output = discriminator(fake_images.detach())
         loss_fake = criterion(output.view(-1), fake_label)
@@ -132,12 +136,12 @@ import matplotlib.pyplot as plt
 
 # Load the trained generator
 latent_dim = 100
-generator = Generator(latent_dim)
+generator = Generator(latent_dim).to(device)
 generator.load_state_dict(torch.load('generator.pth'))  # Load the trained generator state dict
 
 # Generate images
 num_images = 10
-noise = torch.randn(num_images, latent_dim, 1, 1)
+noise = torch.randn(num_images, latent_dim, 1, 1, device=device)  # Generate noise on the device
 generated_images = generator(noise)
 
 # Denormalize and display the generated images
